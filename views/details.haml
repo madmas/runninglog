@@ -17,6 +17,8 @@
     %br/
     &= "Maximum Elevation: " + (@gpx.getMaxElevation).to_s + " m (-> Difference: " + (@gpx.getMaxElevation - @gpx.getMinElevation).to_s + " m)"
     %br/
+    -# A seperate key is needed for each domain! Get a matching one at http://code.google.com/apis/maps/signup.html
+    -# For localhost, it is: ABQIAAAAnfs7bKE82qgb3Zc2YyS-oBT2yXp_ZAY8_ufC3CFXhHIE1NvwkxSySz_REpPq-4WZA27OwgbtyR3VcA
     <script type="text/javascript">var key="ABQIAAAA5HjPtKDb8pxCBAAWwDNtdBSeBEYf3hs1AEOdQ_UV6rBWjb4d_RRXTVECA9Xh3Za3lAcyVZ_J07jl1g";</script><script type="text/javascript" src="/gpx/GPX2GM.js"></script>
     = '<img src="' + @gpx.getSpeedGraph + '"/>'
     %br/

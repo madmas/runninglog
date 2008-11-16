@@ -5,3 +5,6 @@ Other gems in use:
 - haml: A template language (gem install haml)
 - hpricot (or nokogiri): an xml parser (gem install hpricot/nokogiri)
 - gchart: A wrapper arround the google charts API (gem install googlecharts)
+
+Usage:
+Just place your gpx files in /public/gpx/

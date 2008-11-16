@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 require "rubygems"
-require "hpricot"
-
 require "time"
 require 'gchart' #gem install googlecharts
 require ("lib/geo.rb")

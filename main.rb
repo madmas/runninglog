@@ -4,6 +4,8 @@ require "haml"
 require "lib/GPXStats.rb"
 require "lib/caching.rb"
 
+mime :gpx, 'text/html'
+
 get '/' do
 	haml :index
 end
@@ -18,7 +20,6 @@ end
 
 get '/view/*' do
     #As the cached stuff doesn't seem to be recognized otherwise
-	mime :gpx, 'text/html'
     #We get the filename that is attached to the view
     @filename = params["splat"]
     #And parse the file in question, this will take the longest time of them all

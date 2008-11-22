@@ -13,6 +13,8 @@ get '/' do
 end
 
 get '/list' do
+
+    @time_start = Time.now
 	#First we get all the gpx files in the gpx directory
     #As they are named e.g. "2008-09-30_14-36-52.gpx", we only have to sort and reverse them to get the newer ones on top
     @gpx_files = Dir['public/gpx/*.gpx'].sort.reverse

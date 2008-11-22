@@ -31,6 +31,7 @@
         <% end %>  
     </table>
     <h2>Total runs: <%= @gpx_files.length.to_s %> (<%= (@distance.to_f/1000).to_s %> km)(<%= Integer((@duration_s/60/60)) %>h)</h2>
+    <h5>creating this page took <%= Time.now - @time_start %> seconds</h5>
     </body>
   </head>
 </html>

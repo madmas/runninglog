@@ -32,6 +32,14 @@ get '/list' do
 	erb :list
 end
 
+get '/update_stats_files' do
+@gpx_files = Dir['public/gpx/*.gpx'].sort.reverse
+for entry in @gpx_files
+GpxStats.new(entry).save_yaml_stats_file
+end
+'Done --> <a href="/">return</a>'
+end
+
 get '/view/*' do
     #As the cached stuff doesn't seem to be recognized otherwise
     #We get the filename that is attached to the view

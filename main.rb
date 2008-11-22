@@ -9,7 +9,7 @@ require 'lib/gpx_stats_model.rb'
 mime :gpx, 'text/html'
 
 get '/' do
-	haml :index
+	erb :index
 end
 
 get '/list' do
@@ -19,27 +19,29 @@ get '/list' do
     #As they are named e.g. "2008-09-30_14-36-52.gpx", we only have to sort and reverse them to get the newer ones on top
     @gpx_files = Dir['public/gpx/*.gpx'].sort.reverse
     @stats_files = Dir['public/gpx/*.gpx_stats.yml'].sort.reverse
+    
     @distance = 0
     @duration_s = 0
+    
     for statfile in @stats_files
-    aFile = File.open( statfile )
-    my_YAML = YAML::load( aFile )
-    aFile.close
-    GC.start
-    @distance+=my_YAML.distance
-    @duration_s+=my_YAML.duration_s
+        aFile = File.open( statfile )
+        my_YAML = YAML::load( aFile )
+        aFile.close
+        GC.start
+        @distance+=my_YAML.distance
+        @duration_s+=my_YAML.duration_s
     
     end
-    #Now let's enter the list.haml view
+    #Now let's enter the list.erb view
 	erb :list
 end
 
 get '/update_stats_files' do
-@gpx_files = Dir['public/gpx/*.gpx'].sort.reverse
-for entry in @gpx_files
-GpxStats.new(entry).save_yaml_stats_file
-end
-'Done --> <a href="/">return</a>'
+    @gpx_files = Dir['public/gpx/*.gpx'].sort.reverse
+    for entry in @gpx_files
+        GpxStats.new(entry).save_yaml_stats_file
+    end
+    'Done --> <a href="/">return</a>'
 end
 
 get '/view/*' do

@@ -6,6 +6,7 @@ require ("lib/geo.rb")
 class GpxStats
 
   def initialize(inputfile)
+    start_time = Time.now
     @input = inputfile
     @speeds = Array.new
     @elevations = Array.new
@@ -28,11 +29,11 @@ class GpxStats
     end
     
     (doc/:trkpt).each do |trackpoint|
-      current_time = Time.parse(trackpoint.search("time").to_s)
+      current_time = Time.parse(trackpoint.at("time").inner_text)
       @times.push(current_time)
-      current_speed = Integer(trackpoint.search("speed").text)
+      current_speed = Integer(trackpoint.at("speed").inner_text)
       @speeds.push(current_speed)
-      current_elevation = Integer(trackpoint.search("ele").text)
+      current_elevation = Integer(trackpoint.at("ele").inner_text)
       @elevations.push(current_elevation)
       current_lat = Float(trackpoint['lat'])
       current_lon = Float(trackpoint['lon'])
@@ -51,8 +52,8 @@ class GpxStats
 
     end
  
-  
-    puts "**Done with the initialization of #{@input.to_s}"
+    end_time = Time.now
+    puts "**Done with the initialization of #{@input.to_s}. It took #{(end_time-start_time).to_s} secs"
   end
 
   def getTotalDistanceMeters
@@ -111,14 +112,6 @@ class GpxStats
     return @speeds
   end
 
-  def get maxelevation
-    return @elevations.max
-  end
-
-  def get max_speed
-    return @speeds.max
-  end
-
   def getSpeedGraph
     #we can't send ALL the speeds to the google charts service, so we figure out how we have to divide to get approximately 600
     fraction = 1
@@ -158,6 +151,17 @@ class GpxStats
       :axis_labels => [['0 m',Integer(getTotalDistanceMeters).to_s + " m"], [getMinElevation.to_s + " m",getMaxElevation.to_s + " m"]],
       :data => inputdata)  #select only the numbers in the array which are divisible by "fraction"
    end
-
+   
+   def save_yaml_stats_file
+   require 'yaml'
+   require 'lib/gpx_stats_model.rb'
+   statistics = GPXstatsmodel.new(getTotalDistanceMeters, getDurationSeconds, getAverageSpeedRounded, getMaxSpeed, getMaxElevation, getMinElevation)
+   
+   aFile = File.new(@input + "_stats.yml", "w")
+   aFile.write(statistics.to_yaml)
+   aFile.close
+   GC.start
+   puts "Saving yml stats file: " + @input.to_s + "_stats.yml"
+   end
 
 end

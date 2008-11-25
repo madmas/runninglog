@@ -53,8 +53,10 @@ get '/view/*' do
     @gpx = GpxStats.new("public/gpx/" + @filename.to_s)
     if (!File.exist?("public/gpx/" + @filename.to_s + "_stats.yml"))
     @gpx.save_yaml_stats_file
-    end
+    haml: details
+    elsif
     #Now we go into the details.haml view, probably cached thanks to lib/caching.rb (look at the bottom of the resulting pages sourcecode for caching comment)
-    #cache(haml :details)
-    haml :details
+    cache(haml :details)
+    end
+    
 end

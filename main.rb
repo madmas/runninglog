@@ -48,10 +48,12 @@ get '/view/*' do
     #As the cached stuff doesn't seem to be recognized otherwise
     #We get the filename that is attached to the view
     @filename = params["splat"]
-    #And parse the file in question, this will take the longest time of them all
-    #Will only be called if the file isn't in cache yet!
-    if (!File.exist?("public/gpx/" + @filename.to_s + "_stats.yml"))
+    
+    #this should be able to go into the File.exist? part below, but it somehow doesn't work on my server atm
     @gpx = GpxStats.new("public/gpx/" + @filename.to_s)
+    
+    
+    if (!File.exist?("public/gpx/" + @filename.to_s + "_stats.yml"))
     @gpx.save_yaml_stats_file
     haml :details
     elsif

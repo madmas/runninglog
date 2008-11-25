@@ -50,8 +50,8 @@ get '/view/*' do
     @filename = params["splat"]
     #And parse the file in question, this will take the longest time of them all
     #Will only be called if the file isn't in cache yet!
-    @gpx = GpxStats.new("public/gpx/" + @filename.to_s)
     if (!File.exist?("public/gpx/" + @filename.to_s + "_stats.yml"))
+    @gpx = GpxStats.new("public/gpx/" + @filename.to_s)
     @gpx.save_yaml_stats_file
     haml: details
     elsif

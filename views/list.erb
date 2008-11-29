@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title><%=title %></title>
+      <body>
+    <a href="/"> Return</a>
+    <br/>
+    <table>
+        <tr>
+        <th>date</th>
+        <th>details</th>
+        <th>distance</th>
+        <th>duration</th>
+        <th>avg speed</th>
+        </tr>
+      <tr>
+        <% for entry in @gpx_files %>
+          <tr>
+            <th>
+              <%= entry.split("/")[2].split(".")[0] %>
+            </th>
+            <th>
+              <a href="/view/<%= entry.split("/")[2] %>">view</a>
+            </th>
+            <th> 
+              <%= if (@stats_files.include?(entry + "_stats.yml"))
+              stats_file = YAML::load( File.open( entry + "_stats.yml" ) )
+                    "| " + stats_file.distance.to_s + " m\n<th>\n" + (Integer(stats_file.duration_s)/60).to_s + " min</th>\n<th>" + stats_file.speed_avg.to_s + " km/h</th>"
+                    end%>
+            <th>
+          </tr>
+        <% end %>  
+    </table>
+    <h2>Total runs: <%= @gpx_files.length.to_s %> (<%= (@distance.to_f/1000).to_s %> km)(<%= Integer((@duration_s/60/60)) %>h)</h2>
+    <h5>creating this page took <%= Time.now - @time_start %> seconds</h5>
+    </body>
+  </head>
+</html>

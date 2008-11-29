@@ -7,6 +7,7 @@ class GpxStats
 
   def initialize(inputfile)
     @input = inputfile
+    @heartrates = Array.new
     @speeds = Array.new
     @elevations = Array.new
     @times = Array.new
@@ -20,20 +21,23 @@ class GpxStats
     #@parser = "nokogiri"
 
     if (@parser=="hpricot")
-    require 'hpricot'
-    doc = Hpricot.parse(File.read(inputfile))
+    	require 'hpricot'
+	doc = Hpricot.parse(File.read(inputfile))
     elsif (@parser == "nokogiri")
-    require 'nokogiri'
-    doc = Nokogiri.Hpricot(File.read(inputfile))
+	    require 'nokogiri'
+	    doc = Nokogiri.Hpricot(File.read(inputfile))
     end
     
     (doc/:trkpt).each do |trackpoint|
       current_time = Time.parse(trackpoint.search("time").to_s)
       @times.push(current_time)
-      current_speed = Integer(trackpoint.search("speed").text)
+      current_speed = Float(trackpoint.search("speed").text)
       @speeds.push(current_speed)
-      current_elevation = Integer(trackpoint.search("ele").text)
+      current_elevation = Float(trackpoint.search("ele").text)
       @elevations.push(current_elevation)
+	current_hr = Float(trackpoint.search("extensions").search("gpxdata:hr").text)
+	@heartrates.push(current_hr)	
+
       current_lat = Float(trackpoint['lat'])
       current_lon = Float(trackpoint['lon'])
   
@@ -111,6 +115,14 @@ class GpxStats
     return @speeds
   end
 
+  def getMaxHR
+	return @heartrates.max
+  end
+
+  def getMinHR
+	return @heartrates.min
+  end
+
   def get maxelevation
     return @elevations.max
   end
@@ -146,7 +158,7 @@ class GpxStats
     
     #converting the elevations array to elevations RELATIVE to the minimum elevation
     min_ele = getMinElevation
-    relative_elevations = Array.new
+    relative_elevations = Array.new    
     @elevations.each_index{|x| relative_elevations[x] = @elevations[x] - min_ele}
     inputdata = relative_elevations.select {|v| v%fraction==0}
     Gchart.line(:size => '400x200',
@@ -159,5 +171,27 @@ class GpxStats
       :data => inputdata)  #select only the numbers in the array which are divisible by "fraction"
    end
 
+def getHeartrateGraph
+     #we can't send ALL the elevations to the google charts service, so we figure out how we have to divide to get approximately 600
+     fraction = 1
+     while (@heartrates.length / fraction) > 600
+       fraction = fraction + 1
+     end
+
+     #converting the elevations array to elevations RELATIVE to the minimum elevation
+     min_hr = @heartrates.min
+	rel_hr = Array.new
+     @heartrates.each_index{|x| rel_hr[x] = @heartrates[x] - min_hr}    
+ 
+     inputdata = rel_hr.select {|v| v%fraction==0}
+     Gchart.line(:size => '400x200',
+       :title => "Heartrate: #{getStartTime.strftime("%d-%m-%Y %H:%M:%S")} (#{Integer((getEndTime-getStartTime)/60).to_s} min)",
+       :bg => 'efefef',
+       :max_value => rel_hr.max,
+       :min_value => 0,
+       :axis_with_labels => ['x','y'],
+       :axis_labels => [['0 m',Integer(getTotalDistanceMeters).to_s + " m"], [@heartrates.min.to_s + " bpm",@heartrates.max.to_s + " bpm"]],
+       :data => inputdata)  #select only the numbers in the array which are divisible by "fraction"
+    end
 
 end

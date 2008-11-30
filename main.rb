@@ -8,8 +8,17 @@ require 'lib/gpx_stats_model.rb'
 
 mime :gpx, 'text/html'
 
+#if our config is already loaded, we won't load it again
+if ($config.nil?)
+puts "Loading Config"
+$config= YAML::load( File.open( 'config/config.yml' ) )
+puts "Loaded Config"
+end
+
+
 get '/' do
-	erb :index
+	
+  erb :index
 end
 
 get '/list' do
@@ -55,10 +64,10 @@ get '/view/*' do
     
     if (!File.exist?("public/gpx/" + @filename.to_s + "_stats.yml"))
     @gpx.save_yaml_stats_file
-    haml :details
+    erb :details
     elsif
     #Now we go into the details.haml view, probably cached thanks to lib/caching.rb (look at the bottom of the resulting pages sourcecode for caching comment)
-    cache(haml :details)
+    cache(erb :details)
     end
     
 end

@@ -1,0 +1,4 @@
+#the <title>
+title: 'Runninglog'
+#The key for google maps, originally the key for localhost is in here
+maps_key: 'ABQIAAAAnfs7bKE82qgb3Zc2YyS-oBT2yXp_ZAY8_ufC3CFXhHIE1NvwkxSySz_REpPq-4WZA27OwgbtyR3VcA'

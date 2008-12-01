@@ -36,8 +36,10 @@ class GpxStats
       @speeds.push(current_speed)
       current_elevation = Float(trackpoint.search("ele").text)
       @elevations.push(current_elevation)
+      if trackpoint.search("extensions").length > 0 &&  trackpoint.search("gpxdata:hr").length > 0
 	current_hr = Float(trackpoint.search("extensions").search("gpxdata:hr").text)
 	@heartrates.push(current_hr)	
+      end
 
       current_lat = Float(trackpoint['lat'])
       current_lon = Float(trackpoint['lon'])
@@ -123,6 +125,22 @@ class GpxStats
   def getMinHR
 	return @heartrates.min
   end
+
+  def getAvgHR
+	x = 0
+	@heartrates.each{|hr| x = x + hr }
+	return x/@heartrates.length	
+  end
+
+  def hasHR
+	if @heartrates.length > 1 then
+	  true
+	else
+	  false
+	end
+  end
+
+  
 
   def getSpeedGraph
     #we can't send ALL the speeds to the google charts service, so we figure out how we have to divide to get approximately 600

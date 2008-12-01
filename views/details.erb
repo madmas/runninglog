@@ -2,28 +2,47 @@
 <html>
   <head>
     <title><%= $config["title"] %></title>
+    <style type="text/css">
+     div.left{float:left;width:500px;padding:10px;border: 1px grey solid;}
+     div.right{margin-left:530px;padding:10px;border:1px silver solid;}
+     img{padding: 5px;}
+    </style>
   </head>
   <body>
+   <div class="left">
     <a href='/list'>Return</a>
-    <br />
+    <p>
     Distance: <%= @gpx.getTotalDistanceMeters.to_s %> m
     <br />
-
     Duration: <%= (@gpx.getDurationMinutes.round).to_s %> min
-    <br />
+    </p><p>
     Average Speed: <%= (sprintf "%.2f", @gpx.getAverageSpeed).to_s %> km/h
     <br />
     Maximum Speed: <%= (@gpx.getMaxSpeed).to_s %> km/h
-    <br />
+    </p><p>
     Minimum Elevation: <%= (@gpx.getMinElevation).to_s %> m
     <br />
     Maximum Elevation: <%= (@gpx.getMaxElevation).to_s %> m (-&gt; Difference: 40 m)
-    <br />
-
+    </p><p>
+    <% if @gpx.hasHR then %>	
+     Min HR: <%= (@gpx.getMinHR).to_s %> bpm
+     <br />
+     Max HR: <%= (@gpx.getMaxHR).to_s %> bpm
+     <br />
+     Avg HR: <%= (sprintf "%.2f", @gpx.getAvgHR).to_s %> bpm
+    <% end %>	
+    </p>
+    <div class="gpxview:/gpx/<%= @filename.to_s %>" style="width:500px;height:300px"><noscript>Zum Anzeigen der Karte wird Javascript benötigt.</noscript></div>	
+   </div>
+   <div class="right">
     <script type="text/javascript">var key="<%= $config["maps_key"] %>";</script><script type="text/javascript" src="/gpx/GPX2GM.js"></script>
     <img src="<%= @gpx.getSpeedGraph %>"/>
     <br />
     <img src="<%= @gpx.getElevationGraph %>"/>
-    <div class="gpxview:/gpx/<%= @filename.to_s %>" style="width:500px;height:300px"><noscript>Zum Anzeigen der Karte wird Javascript benötigt.</noscript></div>
+    <% if @gpx.hasHR then %>
+    <br />
+    <img src="<%= @gpx.getHeartrateGraph %>"/>
+    <% end %>
+   </div>
   </body>
 </html>

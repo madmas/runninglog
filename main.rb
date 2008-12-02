@@ -1,6 +1,5 @@
 require "rubygems"
 require "sinatra"
-require "haml"
 require 'yaml'
 require "lib/GPXStats.rb"
 require "lib/caching.rb"

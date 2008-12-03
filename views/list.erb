@@ -19,7 +19,7 @@
               <%= entry.split("/")[2].split(".")[0] %>
             </th>
             <th>
-              <a href="/view/<%= entry.split("/")[2] %>">view</a>
+              <a href="view/<%= entry.split("/")[2] %>">view</a>
             </th>
             <th> 
               <%= if (@stats_files.include?(entry + "_stats.yml"))

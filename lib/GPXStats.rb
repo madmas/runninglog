@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require "rubygems"
-require 'gchart' #gem install googlecharts
+require "gchart" #gem install googlecharts
 require ("lib/geo.rb")
 
 class GpxStats
@@ -19,7 +19,7 @@ class GpxStats
     @total_dist = 0.0
     @infoString = ""
     @parser = "hpricot"
-    #@parser = "nokogiri"
+#    @parser = "nokogiri"
 
     if (@parser=="hpricot")
     	require 'hpricot'
@@ -79,7 +79,7 @@ class GpxStats
   end
 
   def getDurationSeconds
-    return getEndTime-getStartTime
+    return getEndTime - getStartTime
   end
   
   def getDurationMinutes

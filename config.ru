@@ -1,9 +1,10 @@
 require 'rubygems'
 require 'sinatra'
 
-views_path = File.join(File.dirname(__FILE__), 'views')
+root_dir = File.dirname(__FILE__)
+
 Sinatra::Application.default_options.merge!(
-  :views => views_path,
+  :views  => File.join(root_dir, 'views'),
   :run => false,
   :env => :production
 ) 

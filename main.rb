@@ -17,12 +17,6 @@ end
 
 
 get '/' do
-	
-  erb :index
-end
-
-get '/list' do
-
     @time_start = Time.now
 	#First we get all the gpx files in the gpx directory
     #As they are named e.g. "2008-09-30_14-36-52.gpx", we only have to sort and reverse them to get the newer ones on top
@@ -33,10 +27,7 @@ get '/list' do
     @duration_s = 0
     
     for statfile in @stats_files
-        aFile = File.open( statfile )
-        my_YAML = YAML::load( aFile )
-        aFile.close
-        GC.start
+        my_YAML = YAML::load( File.open( statfile ) )
         @distance+=my_YAML.distance
         @duration_s+=my_YAML.duration_s
     
@@ -44,6 +35,7 @@ get '/list' do
     #Now let's enter the list.erb view
 	erb :list
 end
+
 
 get '/update_stats_files' do
     @gpx_files = Dir['public/gpx/*.gpx'].sort.reverse

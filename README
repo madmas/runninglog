@@ -2,7 +2,6 @@ Runninglog is a simple sinatra-based web-app which displays information about GP
 Caching is done via http://github.com/kematzy/sinatra-cache/
 Other gems in use:
 - Sinatra: A simple web-framework (gem install sinatra)
-- haml: A template language (gem install haml)
 - hpricot (or nokogiri): an xml parser (gem install hpricot/nokogiri)
 - gchart: A wrapper arround the google charts API (gem install googlecharts)
 

@@ -1,9 +1,7 @@
 require "rubygems"
 require "sinatra"
-require "haml"
 require 'yaml'
 require "lib/GPXStats.rb"
-require "lib/caching.rb"
 require 'lib/gpx_stats_model.rb'
 
 mime :gpx, 'text/html'
@@ -46,20 +44,23 @@ get '/update_stats_files' do
 end
 
 get '/view/*' do
-    #As the cached stuff doesn't seem to be recognized otherwise
-    #We get the filename that is attached to the view
+
     @filename = params["splat"]
+    cached_file = "public/cache/" + @filename.to_s + "_cache.htm"
     
-    #this should be able to go into the File.exist? part below, but it somehow doesn't work on my server atm
+    if (!File.exist?(cached_file))
+    #do our calculations
     @gpx = GpxStats.new("public/gpx/" + @filename.to_s)
-    
-    
-    if (!File.exist?("public/gpx/" + @filename.to_s + "_stats.yml"))
+    #save the yaml file
     @gpx.save_yaml_stats_file
-    erb :details
-    elsif
-    #Now we go into the details.haml view, probably cached thanks to lib/caching.rb (look at the bottom of the resulting pages sourcecode for caching comment)
-    cache(erb :details)
+    
+    #save the html output to our cache
+    File.open(cached_file, 'w') {|f|
+    f.write(erb :details)   
+    }  
     end
+    #return our cached output
+    File.open(cached_file).readlines
+
     
 end

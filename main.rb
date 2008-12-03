@@ -56,7 +56,7 @@ get '/view/*' do
     
     #save the html output to our cache
     File.open(cached_file, 'w') {|f|
-    f.write(erb :details)   
+    f.write(erb(:details))   
     }  
     end
     #return our cached output

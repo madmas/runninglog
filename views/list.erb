@@ -1,35 +1,74 @@
 <html>
   <head>
     <title><%= $config["title"] %></title>
+	 <style type="text/css">
+		table{
+			border-width: 1px;
+		        border-spacing: 0px;
+		        border-style: outset outset outset;
+		        border-color: gray;
+		        border-collapse: separate;
+		}
+		th{
+			border-width: 1px;
+			padding: 3px;
+			border-style: dotted;
+			border-color: silver;
+			background-color: white;
+			-moz-border-radius: 6px;
+		}
+		tr.odd{
+			background-color: #ffffee;
+		}
+		tr.even{
+			background.color: #ff0;
+		}
+		td{
+			border-width: 1px;
+		        padding: 3px;
+			border-style: dotted;
+		        -moz-border-radius: 6px 6px 6px 6px;
+		}
+		td.number{text-align: right;}
+		div#content{width: 1000px; margin: 20px auto;}
+	 </style>
       <body>
+<div id="content">
+    <h1><%= $config["title"] %></h1>	
     <table>
         <tr>
         <th>date</th>
-        <th>details</th>
         <th>distance</th>
         <th>duration</th>
         <th>avg speed</th>
+	<th>ele diff</th>
+	<th>max &hearts;</th>
+	<th>avg &hearts;</th>
         </tr>
       <tr>
-        <% for entry in @gpx_files %>
-          <tr>
-            <th>
-              <%= entry.split("/")[2].split(".")[0] %>
-            </th>
-            <th>
-              <a href="view/<%= entry.split("/")[2] %>">view</a>
-            </th>
-            <th> 
+        <% i=0
+	   for entry in @gpx_files 
+		i=i+1
+	%>
+          <tr class="<%= (i % 2 == 0 ? "even" : "odd") %>" >
+            <td>
+              <a href="view/<%= entry.split("/")[2] %>"><%= entry.split("/")[2].split(".")[0] %></a>
+            </td>
               <%= if (@stats_files.include?(entry + "_stats.yml"))
-              stats_file = YAML::load( File.open( entry + "_stats.yml" ) )
-                    "| " + stats_file.distance.to_s + " m\n<th>\n" + (Integer(stats_file.duration_s)/60).to_s + " min</th>\n<th>" + stats_file.speed_avg.to_s + " km/h</th>"
-                    end%>
-            <th>
+	          stats_file = YAML::load( File.open( entry + "_stats.yml" ) )
+                    "<td class='number'> " + stats_file.distance.to_s + " m</td>\n" + 
+		   "<td class='number'>" + (Integer(stats_file.duration_s)/60).to_s + " min</td>\n" +
+		   "<td class='number'>" + stats_file.speed_avg.to_s + " km/h</td>\n" +
+		   "<td class='number'>" + stats_file.elevation_diff.to_s + " m </td>\n" +
+		   "<td class='number'>" + stats_file.hr_max.to_s  + " bpm </td>\n" +	
+		   "<td class='number'>" + (sprintf "%.2f",stats_file.hr_avg).to_s  + " bpm </td>\n"
+              end%>
           </tr>
         <% end %>  
     </table>
     <h2>Total runs: <%= @gpx_files.length.to_s %> (<%= (@distance.to_f/1000).to_s %> km)(<%= Integer((@duration_s/60/60)) %>h)</h2>
     <h5>creating this page took <%= Time.now - @time_start %> seconds</h5>
+</div>
     </body>
   </head>
 </html>

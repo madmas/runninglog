@@ -127,9 +127,13 @@ class GpxStats
   end
 
   def getAvgHR
-	x = 0
-	@heartrates.each{|hr| x = x + hr }
-	return x/@heartrates.length	
+	if @heartrates.length>1
+		x = 0
+		@heartrates.each{|hr| x = x + hr }
+		return x/@heartrates.length	
+	else
+		return 0
+	end
   end
 
   def hasHR
@@ -183,15 +187,15 @@ class GpxStats
    end
    
    def save_yaml_stats_file
-   require 'yaml'
-   require 'lib/gpx_stats_model.rb'
-   statistics = GPXstatsmodel.new(getTotalDistanceMeters, getDurationSeconds, getAverageSpeedRounded, getMaxSpeed, getMaxElevation, getMinElevation)
+   	require 'yaml'
+	require 'lib/gpx_stats_model.rb'
+	statistics = GPXstatsmodel.new(getTotalDistanceMeters, getDurationSeconds, getAverageSpeedRounded, getMaxSpeed, getMaxElevation, getMinElevation, getMaxElevation - getMinElevation, getMinHR, getMaxHR, getAvgHR)
    
-   aFile = File.new(@input + "_stats.yml", "w")
-   aFile.write(statistics.to_yaml)
-   aFile.close
-   GC.start
-   puts "Saving yml stats file: " + @input.to_s + "_stats.yml"
+   	aFile = File.new(@input + "_stats.yml", "w")
+   	aFile.write(statistics.to_yaml)
+   	aFile.close
+   	GC.start
+   	puts "Saving yml stats file: " + @input.to_s + "_stats.yml"
    end
 
 def getHeartrateGraph

@@ -22,7 +22,7 @@
     </p><p>
     Minimum Elevation: <%= (@gpx.getMinElevation).to_s %> m
     <br />
-    Maximum Elevation: <%= (@gpx.getMaxElevation).to_s %> m (-&gt; Difference: 40 m)
+    Maximum Elevation: <%= (@gpx.getMaxElevation).to_s %> m (-&gt; Difference: <%= Integer(@gpx.getMaxElevation - @gpx.getMinElevation).to_s %>m)
     </p><p>
     <% if @gpx.hasHR then %>	
      Min HR: <%= (@gpx.getMinHR).to_s %> bpm

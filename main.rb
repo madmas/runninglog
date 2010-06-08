@@ -4,7 +4,7 @@ require 'yaml'
 require "lib/GPXStats.rb"
 require 'lib/gpx_stats_model.rb'
 
-mime :gpx, 'text/html'
+mime_type :gpx, 'text/html'
 
 #if our config is already loaded, we won't load it again
 if ($config.nil?)

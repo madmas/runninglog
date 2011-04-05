@@ -32,7 +32,8 @@ class GpxStats
     (doc/:trkpt).each do |trackpoint|
       current_time = Time.parse(trackpoint.at("time").inner_text)
       @times.push(current_time)
-      current_speed = Float(trackpoint.search("speed").text)
+      speed = trackpoint.search("speed")
+      current_speed = Float(speed.text.length > 0 ? speed.text: 0)
       @speeds.push(current_speed)
       current_elevation = Float(trackpoint.search("ele").text)
       @elevations.push(current_elevation)

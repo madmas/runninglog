@@ -3,11 +3,11 @@ require 'sinatra'
 
 root_dir = File.dirname(__FILE__)
 
-Sinatra::Application.default_options.merge!(
+Sinatra::Base.set(
   :views  => File.join(root_dir, 'views'),
   :run => false,
   :env => :production
 ) 
 
 require 'main.rb'
-run Sinatra.application
+run Sinatra::Application
